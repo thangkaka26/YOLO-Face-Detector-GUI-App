@@ -1,9 +1,10 @@
 # YOLO FACE DETECTOR GUI APPLICATION
 
 <p align="center">
-  <img src="imgs/main_menu.png" width="35%">
-  <img src="imgs/mid_res.jpg" width="42%">
-  <img src="imgs/high_res.jpg" width="50%">
+  <img src="imgs/main_menu.png" width="45.5%">
+  <img src="imgs/high_res.jpg" width="50.5%">
+  <img src="imgs/mid_res.jpg" width="48%">
+  <img src="imgs/low_res.jpg" width="48%">
 </p>
 
 ## About
@@ -13,7 +14,7 @@
 - More about YOLOv8: [Ultralytics](https://docs.ultralytics.com/models/yolov8)
 
 ## Installation
-- Download the compressed .rar file (eg. app-v1.rar) in release.
+- Download the compressed .rar file (eg. yolo-face-detector-v1.rar) in [release](https://github.com/thangkaka26/YOLO-Face-Detector-GUI-App/releases).
 - Extract the .rar then you get a folder containing the application.
 
 ## Usage
