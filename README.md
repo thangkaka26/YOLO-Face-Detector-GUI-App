@@ -1,10 +1,10 @@
 # YOLO FACE DETECTOR GUI APPLICATION
 
 <p align="center">
-  <img src="imgs/main_menu.png" width="45.5%">
-  <img src="imgs/high_res.jpg" width="50.5%">
-  <img src="imgs/mid_res.jpg" width="48%">
-  <img src="imgs/low_res.jpg" width="48%">
+  <img src="imgs/main_menu.png" width="40.5%">
+  <img src="imgs/high_res.jpg" width="45.5%">
+  <img src="imgs/mid_res.jpg" width="43%">
+  <img src="imgs/low_res.jpg" width="43%">
 </p>
 
 ## About
