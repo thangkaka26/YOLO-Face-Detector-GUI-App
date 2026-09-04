@@ -8,7 +8,7 @@ from ultralytics import YOLO
 
 
 def get_resource_path(relative_path: str) -> Path:
-    """Return a Path to a resource, handling PyInstaller's _MEIPASS when frozen."""
+    # Return a Path to a resource, handling PyInstaller's _MEIPASS when frozen
     if getattr(sys, "frozen", False):
         base_path = Path(sys._MEIPASS)
     else:
@@ -17,6 +17,7 @@ def get_resource_path(relative_path: str) -> Path:
 
 
 def get_save_path() -> Path:
+    # Automatically create "saves" directory whenever missing
     if getattr(sys, "frozen", False):
         base_path = Path(sys._MEIPASS).parent
     else:
@@ -54,35 +55,55 @@ class YOLO_Face_Detector:
 
 
     def _save_img(self):
+        if not self.__save_path.exists():
+            self.__save_path = get_save_path()
+
         detected = self._detect()
 
-        counter = 1
+        # Gathering filename components
         img_format = self.__img_path.suffix
         img_name = self.__img_path.stem
         img_save_name = img_name + " output" + img_format
+        
+        # Base save directory if no duplication
         destination = self.__save_path / img_save_name
 
-        while destination.exists():
-            img_save_name = f"{img_name} output ({counter}){img_format}"
-            destination = self.__save_path / img_save_name
-            counter += 1
+        
+        while True:
+            # Handle duplicated filename: assign a number in the end (e.g. "predicted_image output (1).jpg")
+            counter = 1
+            # Scan all duplicated filenames iteratively
+            while destination.exists():
+                # Update filename
+                img_save_name = f"{img_name} output ({counter}){img_format}"
+                destination = self.__save_path / img_save_name
+                counter += 1
 
-        detected[0].plot(save=True, filename=destination, line_width=2, color_mode=self.__color_mode, labels=False, show=False)
-        self.__cur_pred_img = destination
+            # Core saving mechanic into disk
+            detected[0].plot(save=True, filename=destination, line_width=2, color_mode=self.__color_mode, labels=False, show=False)
+            
+            # If success, save the directory (Path)
+            if destination.exists():
+                self.__cur_pred_img = destination
+                break
+            
+            # If encounter unsupported extensions, fallback to .jpg and retry
+            img_format = ".jpg"
+            img_save_name = img_name + " output" + img_format
+            destination = self.__save_path / img_save_name
+            continue
 
 
     def show_img(self):
-        try:
-            self._save_img()
-        except:
-            self.__save_path = get_save_path()
-            self._save_img
+        self._save_img()
 
+        # Handle different OSs
         opener = {
             'win32': 'explorer',
             'darwin': 'open',
             'linux': 'xdg-open'
-        }.get(sys.platform, 'explorer')
-
+        }.get(sys.platform)
+        
         subprocess.run([opener, self.__cur_pred_img])
+        
         self.__cur_pred_img = None
