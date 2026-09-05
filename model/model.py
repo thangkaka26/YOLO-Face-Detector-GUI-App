@@ -30,7 +30,7 @@ def get_save_path() -> Path:
 
 class YOLO_Face_Detector:
     def __init__(self):
-        self.__model = YOLO(get_resource_path("save/best.pt"))
+        self.__model = YOLO(get_resource_path("yolo/custom_yolov8n.pt"))
         self.__img_path = None
         self.__confidence = 0.25
         self.__color_mode = "class"
@@ -67,7 +67,6 @@ class YOLO_Face_Detector:
         
         # Base save directory if no duplication
         destination = self.__save_path / img_save_name
-
         
         while True:
             # Handle duplicated filename: assign a number in the end (e.g. "predicted_image output (1).jpg")
