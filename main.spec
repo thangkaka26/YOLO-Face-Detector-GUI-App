@@ -8,7 +8,7 @@ a = Analysis(
     datas=[
         ('ui/assets/github_icon.png', 'ui/assets'),
         ('ui/assets/app.ico', 'ui/assets'),
-        ('save/best.pt', 'save')
+        ('yolo/custom_yolov8n.pt', 'yolo')
     ],
     hiddenimports=[],
     hookspath=[],

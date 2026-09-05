@@ -2,7 +2,7 @@ import sys
 sys.dont_write_bytecode = True
 
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from model.model import YOLO_Face_Detector
 import webbrowser
 from pathlib import Path
@@ -32,7 +32,7 @@ class GUI:
         self.force_numeric_entry = self.root.register(self._force_conf_numeric)
         self.root.bind_all("<Button-1>", self._clear_focus)
 
-
+        # "Open an Image File" button
         self.exec_btn = tk.Button(
             self.root,
             text="Open an Image File",
@@ -45,8 +45,10 @@ class GUI:
             width=20, height=2)
         self.exec_btn.place(relx=0.5, rely=0.3, anchor='center')
 
-
+        # Tracing the current confidence value of the slider
         self.model_conf.trace_add("write", self._change_confidence)
+        
+        # "Detector's confidence" slider
         self.conf_slider = tk.Scale(
             self.root,
             variable=self.model_conf,
@@ -60,6 +62,7 @@ class GUI:
         self.conf_slider.place(relx=0.5, rely=0.5, anchor='center')
         self.conf_slider.set(75)
 
+        # Input entry next to the slider
         self.conf_entry = tk.Entry(
             self.root,
             width=5,
@@ -70,8 +73,10 @@ class GUI:
         )
         self.conf_entry.place(relx=0.7, rely=0.52, anchor="center")
 
-
+        # Tracing the current color mode selection
         color_mode_var = tk.IntVar(value=1)
+        
+        # "Box Color Mode" radio button (aka. multiple choices)
         self.radio_label = tk.Label(
             self.root,
             text="Box Color Mode",
@@ -79,6 +84,7 @@ class GUI:
         )
         self.radio_label.place(relx=0.5, rely=0.65, anchor="center")
         
+        # "Identical" color option
         tk.Radiobutton(
             self.root, text="Identical",
             font=("Helvetica", 12, "italic"),
@@ -86,6 +92,7 @@ class GUI:
             command=lambda: self.yolo_model.set_color_mode("class")
             ).place(relx=0.4, rely=0.7, anchor='center')
         
+        # "Diverse" color option
         tk.Radiobutton(
             self.root, text="Diverse",
             font=("Helvetica", 12, "italic"),
@@ -93,7 +100,7 @@ class GUI:
             command=lambda: self.yolo_model.set_color_mode("instance")
             ).place(relx=0.6, rely=0.7, anchor='center')
 
-
+        # "Source" button
         self.url_btn = tk.Button(
             self.root,
             command=lambda:webbrowser.open("https://github.com/thangkaka26/YOLO-Face-Detector-GUI-App"),
@@ -107,11 +114,11 @@ class GUI:
         self.url_btn.image = self.src_btn_icon 
         self.url_btn.place(relx=0.98, rely=0.98, anchor='se')
 
-
         self.root.mainloop()
 
 
     def _validate_conf_entry(self, *args):
+        # Ensure the confidence values are integer and [0, 100]
         try:
             current = self.model_conf.get()
             self.model_conf.set(int(current))
@@ -126,12 +133,14 @@ class GUI:
 
 
     def _force_conf_numeric(self, text):
+        # Force numeric values for the confidence
         if (text == "") or (text.isdigit()):
             return True
         return False
 
     
     def _clear_focus(self, event):
+        # End focus on input entry when click outside
         if not (isinstance(event.widget, tk.Entry)):
             self.root.focus_set()
 
@@ -148,11 +157,13 @@ class GUI:
             if (img_path):
                 self.yolo_model.set_img_path(img_path)
                 self.yolo_model.show_img()
-        except:
-            pass
+        
+        except Exception as e:
+            messagebox.showerror("Error", str(e))    
 
 
     def _change_confidence(self, *args):
+        # Confidence setting for slider
         raw_value = self.model_conf.get()
         parsed_value = 1 - (raw_value / 100)
         return self.yolo_model.set_confidence(parsed_value)
